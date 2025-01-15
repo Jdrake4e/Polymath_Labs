@@ -63,7 +63,7 @@ Study materials and examples will be provided in the following languages:
 ## Getting Started
 
 1. Check the [Issues](../../issues) tab for upcoming sessions and assignments
-2. Review the session calendar (TBD via group availability poll)
+2. Review the session calendar on Discord
 3. Clone the repository to access materials:
 ```bash
 git clone https://github.com/Jdrake4e/CS-and-Math-Study-Group.git
