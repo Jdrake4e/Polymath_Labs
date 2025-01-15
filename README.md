@@ -111,6 +111,6 @@ For questions or to join the study group, please open an issue in this repositor
 
 ## License
 
-"For now, materials are shared for educational purposes only. A formal license will be added later."
+Until a license is decided upon, materials are shared for educational purposes only. A formal license will be added later.
 
 [License information to be determined]
