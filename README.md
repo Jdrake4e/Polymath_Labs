@@ -51,7 +51,7 @@ Study materials and examples will be provided in the following languages:
 - Rotating presenters and topics
 - Combination of lectures, hands-on problems, and projects
 - 6-week "terms" focused on specific topic areas
-- Optional monthly research paper discussions from arxiv.org
+- Monthly research paper discussions from arxiv.org
 
 ### Materials
 - Lecture slides (PDF format)
