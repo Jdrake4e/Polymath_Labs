@@ -162,14 +162,19 @@ int main(){
     auto objective3 = [](std::vector<double> vars) -> std::vector<double> {
         return {vars[0] + vars[1] + vars[2] + vars[3]};
     };
-    
+
+    // Define upper and lower bounds of the integral
+    double upper_bound =  2;
+    double lower_bound = -2;
+
+
     // Generating both the maximum and minimum parameters for Monte Carlo 
     double max = MADS(objective2, true);
     double min = MADS(objective2, false);
 
-    double area = Monte_Carlo_Integration(objective2, min, max, -2, 2);
+    double area = Monte_Carlo_Integration(objective2, min, max, lower_bound, upper_bound);
 
-    std::cout << "The integral of x + 2 = " << area << "\n";
+    std::cout << "The integral of x + 2 from " << lower_bound << " to " << upper_bound << " approximately equals " << area << "\n";
 
     return 0;
 }
