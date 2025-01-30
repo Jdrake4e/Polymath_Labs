@@ -77,7 +77,9 @@ Raises
 
 
 double Monte_Carlo_Integration(std::function<std::vector<double>(std::vector<double>)> objective,
-                    double min, double max, double left_bounds, double right_bounds, size_t itmax = 1000, unsigned short thread_count = 1){
+                    double min, double max, 
+                    double left_bound, double right_bound, 
+                    size_t itmax = 1000, unsigned short thread_count = 1){
 /* 
 Summary
 -------
@@ -92,10 +94,10 @@ min : double
 max : double
     Maximum calculated through the MADS function
 
-left_bounds : double
+left_bound : double
     Left-Most Boundary
 
-right_bounds : double
+right_bound : double
     Right-Most Boundary
 
 itmax : size_t 
@@ -113,27 +115,23 @@ Raises:
         - Thread Count > MAX NUMBER OF THREADS ALLOWED ON LINUX (e.g. 513510 || cat /proc/sys/kernel/threads-max)
 
 */                       
+
+    // @TODO add try catch for thread count
     omp_set_num_threads(thread_count);
+
     double area = 0;
     // vector size equals the number of parallel partitions
-    std::vector<double> local_area;
+    std::vector<double> local_area(thread_count, 0.0);
 
-
-    // Initailizing and Assigning Each Local Area Partition (Thread)
-    #pragma omp parallel for private(i)
+    // @TODO Implement montecarlo integration per partition
+    #pragma omp parallel for
     {
-        for(size_t i = 0; i <= thread_count; i++){
-            local_area[i] = 0;
-        }
-    }
-
-    #pragma omp parallel for private(it)
-    {
-        for(size_t it = 0; it < itmax; it++ ) {
+        for(size_t i = 0; i < itmax; i++ ) {
             
         }
     }
 
+    // @TODO Implement ratio math
     #pragma omp parallel reduction(+:area)
     {
         for(size_t i = 0; i < local_area.size(); i++){
