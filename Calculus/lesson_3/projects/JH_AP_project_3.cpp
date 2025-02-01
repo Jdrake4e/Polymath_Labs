@@ -4,7 +4,7 @@ Authors:
     John Hohman
     Austin Pennington
 Created: 01-23-2025
-Last Modified: 01-28-2025
+Last Modified: 01-31-2025
 
 Description:
     Implementation of optimization and integration algorithms:
@@ -78,7 +78,7 @@ Raises
 
 double Monte_Carlo_Integration(std::function<std::vector<double>(std::vector<double>)> objective,
                     double min, double max, 
-                    double left_bound, double right_bound, 
+                    double lower_bound, double upper_bound, 
                     size_t itmax = 1000, unsigned short thread_count = 1){
 /* 
 Summary
@@ -94,11 +94,11 @@ min : double
 max : double
     Maximum calculated through the MADS function
 
-left_bound : double
-    Left-Most Boundary
+lower_bound : double
+    Lower Boundary
 
-right_bound : double
-    Right-Most Boundary
+upper_bound : double
+    Upper Boundary
 
 itmax : size_t 
     Amount of sample points we'll create around us to determine which step gets us closer to our objective
