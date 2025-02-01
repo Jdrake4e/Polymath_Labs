@@ -42,31 +42,34 @@ Copyright (c) 2025. Educational Purposes only.
 #include <iostream>
 #include <string>
 #include <cstdlib>
-#include <unordered_map>
+#include <random>
 #include <omp.h>
 
-constexpr double PI = M_PI;
+std::vector<std::vector<double>> generateScouts(std::vector<double> origin, int scouts, double distance, unsigned int seed = 10110101){
 
-std::vector<std::vector<double>> generatePointsOnSphere(int dims, int points, double min_dist = 1.0, double max_dist = 10.0){
+    std::mt19937 gen{seed};
+    std::normal_distribution d{0.0, distance};
 
-    std::vector<std::vector<double>> coordinates;
+    int dims = origin.size(); 
+    std::vector<std::vector<double>> coordinate_set;
 
+    for(int i = 0; i < scouts; i++){
+        std::vector<double> coordinate;
+        for(int j = 0; j < dims; j++){
+            coordinate[j] = origin[j] + d(gen);
+        }
+        coordinate_set.push_back(coordinate);
+    }
 
-
-    return coordinates;
+    return coordinate_set;
 }
-
-
-enum Pattern {
-    CROSS,
-    DEFAULT
-};
 
 // A single macro for doing numeric mins and maxs
 #define NUMERIC_MAX_MIN(a, b, use_max) ((use_max) ? ((a) > (b) ? (a) : (b)) : ((a) < (b) ? (a) : (b)))
 
-double MADS(std::function<std::vector<double>(std::vector<double>)> objective, 
-                         bool mode, size_t itmax = 100, double delta = 1) {
+double MADS(std::function<double(std::vector<double>)> objective, 
+            bool mode, 
+            size_t itmax = 100, double delta = 1, int scouts = 20) {
 /*
 Summary
 -------
@@ -95,46 +98,40 @@ Returns:
 Raises 
 */
 
-    //010
-    //1C1
-    //010   
+    //@TODO calculate number of dimensions
+
+    std::vector<double> origin;
+    std::vector<double> best_coordinate = origin;
+    std::vector<std::vector<double>> coordinate_set = generateScouts(origin, scouts, 1);
     
-
-
-    std::unordered_map<std::string, Pattern> patternMap = {
-        {"cross", CROSS}
-    };
-
-    std::string patern = "cross";
-    int scouts = 4;
-
-    switch (patternMap[patern]) {
-        case CROSS:
-            std::cout << "Pattern matched: cross" << "\n";
-            scouts = 4;
-            break;
-
-        default:
-            std::cout << "No match found" << "\n";
-            break;
-    }
-
-
+    double best_optima = 0;
+    double new_optima = 0;
 
     for(int it = 0; it < itmax; it++){
+        
+        best_optima = 0;
+        new_optima = 0;
+
         for(int j = 0; j < scouts; j++){
             //define cords via circle
-            std::vector<std::vector<double>> coordinates;
+            double curr_evaluation = objective(coordinate_set[j]);
+            
+            new_optima = NUMERIC_MAX_MIN(best_optima, curr_evaluation, mode);
 
+            if(new_optima > best_optima){
+                best_coordinate = coordinate_set[j];
+                best_optima = new_optima;
+            }
         }
+        
+        coordinate_set = generateScouts(best_coordinate, scouts, 1);
     }
 
-    auto DOUBLE_HERE = 1.0;
-    return DOUBLE_HERE;
+    return best_optima;
 }
 
 
-double Monte_Carlo_Integration(std::function<std::vector<double>(std::vector<double>)> objective,
+double Monte_Carlo_Integration(std::function<double(std::vector<double>)> objective,
                     double min, double max, 
                     std::vector<double> lower_bound, std::vector<double> upper_bound, 
                     size_t itmax = 1000, unsigned short thread_count = 1){
@@ -205,17 +202,17 @@ int main(){
     //lambdas
 
     // For x^2 + y^2
-    auto objective1 = [](std::vector<double> vars) -> std::vector<double> {
+    auto objective1 = [](std::vector<double> vars) -> double {
         return {vars[0] * vars[0] + vars[1] * vars[1]};
     };
 
     // For x + 2
-    auto objective2 = [](std::vector<double> vars) -> std::vector<double> {
+    auto objective2 = [](std::vector<double> vars) -> double {
         return {vars[0] + 2};
     };
 
     // For w + x + y + z
-    auto objective3 = [](std::vector<double> vars) -> std::vector<double> {
+    auto objective3 = [](std::vector<double> vars) -> double {
         return {vars[0] + vars[1] + vars[2] + vars[3]};
     };
 
