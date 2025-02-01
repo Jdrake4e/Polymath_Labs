@@ -161,7 +161,7 @@ int main(){
     }
 
     // File output
-    std::ofstream outFile("john_hohman_project_1_results.csv");
+    std::ofstream outFile("john_hohman_project_2_results.csv");
 
     if(!outFile.is_open()){
     std::cerr << "Error: Could not create output file" << std::endl;
