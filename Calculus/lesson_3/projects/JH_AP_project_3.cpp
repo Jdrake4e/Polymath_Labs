@@ -38,10 +38,32 @@ Copyright (c) 2025. Educational Purposes only.
 
 #include <cmath>
 #include <functional>
+#include <vector>
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <unordered_map>
 #include <omp.h>
+
+constexpr double PI = M_PI;
+
+std::vector<std::vector<double>> generatePointsOnSphere(int dims, int points, double min_dist = 1.0, double max_dist = 10.0){
+
+    std::vector<std::vector<double>> coordinates;
+
+
+
+    return coordinates;
+}
+
+
+enum Pattern {
+    CROSS,
+    DEFAULT
+};
+
+// A single macro for doing numeric mins and maxs
+#define NUMERIC_MAX_MIN(a, b, use_max) ((use_max) ? ((a) > (b) ? (a) : (b)) : ((a) < (b) ? (a) : (b)))
 
 double MADS(std::function<std::vector<double>(std::vector<double>)> objective, 
                          bool mode, size_t itmax = 100, double delta = 1) {
@@ -72,13 +94,49 @@ Returns:
 
 Raises 
 */
-    return {};
+
+    //010
+    //1C1
+    //010   
+    
+
+
+    std::unordered_map<std::string, Pattern> patternMap = {
+        {"cross", CROSS}
+    };
+
+    std::string patern = "cross";
+    int scouts = 4;
+
+    switch (patternMap[patern]) {
+        case CROSS:
+            std::cout << "Pattern matched: cross" << "\n";
+            scouts = 4;
+            break;
+
+        default:
+            std::cout << "No match found" << "\n";
+            break;
+    }
+
+
+
+    for(int it = 0; it < itmax; it++){
+        for(int j = 0; j < scouts; j++){
+            //define cords via circle
+            std::vector<std::vector<double>> coordinates;
+
+        }
+    }
+
+    auto DOUBLE_HERE = 1.0;
+    return DOUBLE_HERE;
 }
 
 
 double Monte_Carlo_Integration(std::function<std::vector<double>(std::vector<double>)> objective,
                     double min, double max, 
-                    double lower_bound, double upper_bound, 
+                    std::vector<double> lower_bound, std::vector<double> upper_bound, 
                     size_t itmax = 1000, unsigned short thread_count = 1){
 /* 
 Summary
@@ -94,11 +152,11 @@ min : double
 max : double
     Maximum calculated through the MADS function
 
-lower_bound : double
-    Lower Boundary
+lower_bound : std::vector<double>
+    Lower Boundarys
 
-upper_bound : double
-    Upper Boundary
+upper_bound : std::vector<double>
+    Upper Boundarys
 
 itmax : size_t 
     Amount of sample points we'll create around us to determine which step gets us closer to our objective
@@ -126,7 +184,7 @@ Raises:
     // @TODO Implement montecarlo integration per partition
     #pragma omp parallel for
     {
-        for(size_t i = 0; i < itmax; i++ ) {
+        for(size_t it = 0; it < itmax; it++ ) {
             
         }
     }
@@ -162,8 +220,8 @@ int main(){
     };
 
     // Define upper and lower bounds of the integral
-    double upper_bound =  2;
-    double lower_bound = -2;
+    std::vector<double> upper_bound =  {2};
+    std::vector<double> lower_bound = {-2};
 
 
     // Generating both the maximum and minimum parameters for Monte Carlo 
@@ -172,7 +230,7 @@ int main(){
 
     double area = Monte_Carlo_Integration(objective2, min, max, lower_bound, upper_bound);
 
-    std::cout << "The integral of x + 2 from " << lower_bound << " to " << upper_bound << " approximately equals " << area << "\n";
+    std::cout << "The integral of x + 2 from " << lower_bound[0] << " to " << upper_bound[0] << " approximately equals " << area << "\n";
 
     return 0;
 }
