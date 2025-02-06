@@ -99,13 +99,15 @@ Raises
 */
 
     //@TODO calculate number of dimensions
-
+    double delta = 1.0;
     std::vector<double> origin;
     std::vector<double> best_coordinate = origin;
-    std::vector<std::vector<double>> coordinate_set = generateScouts(origin, scouts, 1);
+    std::vector<std::vector<double>> coordinate_set = generateScouts(origin, scouts, delta);
     
     double best_optima = 0;
     double new_optima = 0;
+
+    unsigned int seed = 1;
 
     for(int it = 0; it < itmax; it++){
         
@@ -123,8 +125,9 @@ Raises
                 best_optima = new_optima;
             }
         }
-        
-        coordinate_set = generateScouts(best_coordinate, scouts, 1);
+        delta *= 0.95;
+        coordinate_set = generateScouts(best_coordinate, scouts, delta, seed);
+        seed++;
     }
 
     return best_optima;
