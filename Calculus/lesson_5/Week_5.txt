@@ -1,0 +1,9 @@
+This week we simply did practice problems. 
+
+We covered implicit differentization
+
+We covered partial fraction decomposition integration
+
+We covered integration by parts
+
+We covered u substitution
