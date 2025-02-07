@@ -38,13 +38,38 @@ Copyright (c) 2025. Educational Purposes only.
 
 #include <cmath>
 #include <functional>
+#include <vector>
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <random>
 #include <omp.h>
 
-double MADS(std::function<std::vector<double>(std::vector<double>)> objective, 
-                         bool mode, size_t itmax = 100, double delta = 1) {
+std::vector<std::vector<double>> generateScouts(std::vector<double> origin, int scouts, double distance, unsigned int seed = 10110101){
+
+    std::mt19937 gen{seed};
+    std::normal_distribution d{0.0, distance};
+
+    int dims = origin.size(); 
+    std::vector<std::vector<double>> coordinate_set;
+
+    for(int i = 0; i < scouts; i++){
+        std::vector<double> coordinate;
+        for(int j = 0; j < dims; j++){
+            coordinate[j] = origin[j] + d(gen);
+        }
+        coordinate_set.push_back(coordinate);
+    }
+
+    return coordinate_set;
+}
+
+// A single macro for doing numeric mins and maxs
+#define NUMERIC_MAX_MIN(a, b, use_max) ((use_max) ? ((a) > (b) ? (a) : (b)) : ((a) < (b) ? (a) : (b)))
+
+double MADS(std::function<double(std::vector<double>)> objective, 
+            bool mode, 
+            size_t itmax = 100, double delta = 1, int scouts = 20) {
 /*
 Summary
 -------
@@ -72,13 +97,46 @@ Returns:
 
 Raises 
 */
-    return {};
+
+    //@TODO calculate number of dimensions
+    double delta = 1.0;
+    std::vector<double> origin;
+    std::vector<double> best_coordinate = origin;
+    std::vector<std::vector<double>> coordinate_set = generateScouts(origin, scouts, delta);
+    
+    double best_optima = 0;
+    double new_optima = 0;
+
+    unsigned int seed = 1;
+
+    for(int it = 0; it < itmax; it++){
+        
+        best_optima = 0;
+        new_optima = 0;
+
+        for(int j = 0; j < scouts; j++){
+            //define cords via circle
+            double curr_evaluation = objective(coordinate_set[j]);
+            
+            new_optima = NUMERIC_MAX_MIN(best_optima, curr_evaluation, mode);
+
+            if(new_optima > best_optima){
+                best_coordinate = coordinate_set[j];
+                best_optima = new_optima;
+            }
+        }
+        delta *= 0.95;
+        coordinate_set = generateScouts(best_coordinate, scouts, delta, seed);
+        seed++;
+    }
+
+    return best_optima;
 }
 
 
-double Monte_Carlo_Integration(std::function<std::vector<double>(std::vector<double>)> objective,
+double Monte_Carlo_Integration(std::function<double(std::vector<double>)> objective,
                     double min, double max, 
-                    double lower_bound, double upper_bound, 
+                    std::vector<double> lower_bound, std::vector<double> upper_bound, 
                     size_t itmax = 1000, unsigned short thread_count = 1){
 /* 
 Summary
@@ -94,11 +152,11 @@ min : double
 max : double
     Maximum calculated through the MADS function
 
-lower_bound : double
-    Lower Boundary
+lower_bound : std::vector<double>
+    Lower Boundarys
 
-upper_bound : double
-    Upper Boundary
+upper_bound : std::vector<double>
+    Upper Boundarys
 
 itmax : size_t 
     Amount of sample points we'll create around us to determine which step gets us closer to our objective
@@ -126,7 +184,7 @@ Raises:
     // @TODO Implement montecarlo integration per partition
     #pragma omp parallel for
     {
-        for(size_t i = 0; i < itmax; i++ ) {
+        for(size_t it = 0; it < itmax; it++ ) {
             
         }
     }
@@ -147,23 +205,23 @@ int main(){
     //lambdas
 
     // For x^2 + y^2
-    auto objective1 = [](std::vector<double> vars) -> std::vector<double> {
+    auto objective1 = [](std::vector<double> vars) -> double {
         return {vars[0] * vars[0] + vars[1] * vars[1]};
     };
 
     // For x + 2
-    auto objective2 = [](std::vector<double> vars) -> std::vector<double> {
+    auto objective2 = [](std::vector<double> vars) -> double {
         return {vars[0] + 2};
     };
 
     // For w + x + y + z
-    auto objective3 = [](std::vector<double> vars) -> std::vector<double> {
+    auto objective3 = [](std::vector<double> vars) -> double {
         return {vars[0] + vars[1] + vars[2] + vars[3]};
     };
 
     // Define upper and lower bounds of the integral
-    double upper_bound =  2;
-    double lower_bound = -2;
+    std::vector<double> upper_bound =  {2};
+    std::vector<double> lower_bound = {-2};
 
 
     // Generating both the maximum and minimum parameters for Monte Carlo 
@@ -172,7 +230,7 @@ int main(){
 
     double area = Monte_Carlo_Integration(objective2, min, max, lower_bound, upper_bound);
 
-    std::cout << "The integral of x + 2 from " << lower_bound << " to " << upper_bound << " approximately equals " << area << "\n";
+    std::cout << "The integral of x + 2 from " << lower_bound[0] << " to " << upper_bound[0] << " approximately equals " << area << "\n";
 
     return 0;
 }
