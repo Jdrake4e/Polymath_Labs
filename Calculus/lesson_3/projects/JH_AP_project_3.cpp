@@ -224,11 +224,16 @@ Raises:
     // vector size equals the number of parallel partitions
     std::vector<double> local_area(thread_count, 0.0);
 
-    // @TODO Implement montecarlo integration per partition
+    // @TODO Implement montecarlo integration per thread
+
+    //Create array of vectors/points
+    
     #pragma omp parallel for
     {
         for(size_t it = 0; it < itmax; it++ ) {
-            
+            //@TODO implement n-dimensional polymorphism
+            std::mt19937 gen{seed}; // @TODO Generate point (which is a vector)   
+            std::uniform_real_distribution(lower_bound, upper_bound);
         }
     }
 
