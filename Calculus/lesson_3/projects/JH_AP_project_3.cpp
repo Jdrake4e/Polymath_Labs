@@ -13,7 +13,7 @@ Description:
 
 Dependencies:
     OpenMP for parallel processing
-    C++11 or later
+    C++20 or later
 
 Usage:
     Compile with OpenMP support:
@@ -37,12 +37,16 @@ Copyright (c) 2025. Educational Purposes only.
 */
 
 #include <cmath>
+#include <format>
 #include <functional>
 #include <vector>
 #include <iostream>
 #include <string>
 #include <cstdlib>
 #include <random>
+#include <stdexcept>
+#include <system_error>
+#include <fstream>
 #include <omp.h>
 
 std::vector<std::vector<double>> generateScouts(std::vector<double> origin, int scouts, double distance, unsigned int seed = 10110101){
@@ -134,6 +138,45 @@ Raises
 }
 
 
+// A custom error to indicate that user thread count input is either over or under the system bounds
+class ThreadCountOutOfBoundException : public std::runtime_error, public std::nested_exception{
+public:
+    explicit ThreadCountOutOfBoundException(const char* message)
+        : std::runtime_error(message) {}
+};
+
+// A small helper function to handle errors with setting thread count
+void set_thread_count(int thread_count){
+    try{
+        if(thread_count < 1){
+            throw ThreadCountOutOfBoundException("Thread count must be at least 1");
+        }
+
+        int max_threads = omp_get_thread_limit();
+
+        if(thread_count > max_threads){
+            throw ThreadCountOutOfBoundException(std::format("Thread count {} exceeds system maximum of {}", thread_count, max_threads));
+        }
+
+        omp_set_num_threads(thread_count);
+
+    }catch(const ThreadCountOutOfBoundException& e){
+        fprintf(stderr, "ThreadCountOutOfBoundException: %s\n", e.what());
+
+        try{
+            std::rethrow_if_nested(e);
+        }catch(const std::exception& nested){
+            fprintf(stderr, "Caused by: %s\n", nested.what());
+        }
+
+        throw;
+    }catch(const std::exception& e){
+        fprintf(stderr, "Unexpected Error: %s\n", e.what());
+        throw;
+    }
+}
+
+
 double Monte_Carlo_Integration(std::function<double(std::vector<double>)> objective,
                     double min, double max, 
                     std::vector<double> lower_bound, std::vector<double> upper_bound, 
@@ -172,10 +215,9 @@ Raises:
         - Thread Count < 1 
         - Thread Count > MAX NUMBER OF THREADS ALLOWED ON LINUX (e.g. 513510 || cat /proc/sys/kernel/threads-max)
 
-*/                       
+*/          
 
-    // @TODO add try catch for thread count
-    omp_set_num_threads(thread_count);
+    set_thread_count(thread_count);
 
     double area = 0;
     // vector size equals the number of parallel partitions
