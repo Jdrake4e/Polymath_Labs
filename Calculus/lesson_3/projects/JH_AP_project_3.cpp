@@ -50,8 +50,8 @@ Copyright (c) 2025. Educational Purposes only.
 #include <omp.h>
 
 std::vector<std::vector<double>> generateScouts(std::vector<double> origin, int scouts, double distance, unsigned int seed = 10110101){
-
-    std::mt19937 gen{seed};
+    //mersene twister random number generator
+    std::mt19937 gen{seed}; 
     std::normal_distribution d{0.0, distance};
 
     int dims = origin.size(); 
@@ -129,6 +129,7 @@ Raises
                 best_optima = new_optima;
             }
         }
+        // @TODO actually implement adaptivity
         delta *= 0.95;
         coordinate_set = generateScouts(best_coordinate, scouts, delta, seed);
         seed++;
@@ -213,7 +214,7 @@ Returns:
 Raises:
     ThreadCountOutOfBoundsException
         - Thread Count < 1 
-        - Thread Count > MAX NUMBER OF THREADS ALLOWED ON LINUX (e.g. 513510 || cat /proc/sys/kernel/threads-max)
+        - Thread Count > MAX NUMBER OF THREADS ALLOWED ON LINUX (e.g. cat /proc/sys/kernel/threads-max)
 
 */          
 
