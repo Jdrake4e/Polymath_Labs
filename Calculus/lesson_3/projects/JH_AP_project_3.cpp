@@ -4,7 +4,7 @@ Authors:
     John Hohman
     Austin Pennington
 Created: 01-23-2025
-Last Modified: 01-31-2025
+Last Modified: 02-15-2025
 
 Description:
     Implementation of optimization and integration algorithms:
