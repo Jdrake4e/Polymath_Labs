@@ -1,4 +1,5 @@
 # Note: I used the following enviroment command "set PYGAME_DETECT_AVX2=1"
+# Author: John Hohman
 
 import pygame
 import numpy
@@ -42,7 +43,7 @@ while running:
     elif circle_position[1] <= 0:
         y_dir = True
 
-    # Update new position on of circle according to vector_modifier's velocity
+    # Update new position of circle according to vector_modifier's velocity
     if x_dir:
         circle_position[0] += vector_modifier[0]
     else:
@@ -55,7 +56,7 @@ while running:
 
     # Make system wait to display smoother animation
     pygame.time.wait(20)
-    # Update canvas to sisplay changes to user
+    # Update canvas to display changes to user
     pygame.display.flip()
 
 pygame.quit()
