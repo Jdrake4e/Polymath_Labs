@@ -58,7 +58,7 @@ while running:
         circle_position[1] -= vector_modifier[1]
 
     # Make system wait to display smoother animation
-    # pygame.time.wait(20)
+    pygame.time.wait(20)
     # Update canvas to display changes to user
     pygame.display.flip()
 
