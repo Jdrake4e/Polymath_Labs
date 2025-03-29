@@ -230,10 +230,10 @@ def demo_with_image(image_path=None):
     axes[0, 0].imshow(np.clip(image, 0, 1))
     axes[0, 0].set_title("Original RGB")
     
+    # Normalized RGB channels
     vmin_val = 0
     vmax_val = 1
     
-    # Noemalized RGB channels
     axes[0, 1].imshow(image[:, :, 0], cmap='Reds', vmin = vmin_val, vmax = vmax_val)
     axes[0, 1].set_title("R Channel")
     axes[0, 2].imshow(image[:, :, 1], cmap='Greens', vmin = vmin_val, vmax = vmax_val)
