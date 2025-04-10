@@ -1,5 +1,7 @@
 import numpy as np
 
+
+#TODO add response when there are no solutions or infinitely many solutions
 # The last column is the z in w+x+y = z when made into an Augmented matrix
 def guassian_elimination(system_of_equations: np.array):
     
