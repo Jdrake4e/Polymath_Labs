@@ -41,7 +41,7 @@ Study materials and examples will be provided in the following languages:
 - C/C++ (Systems programming, algorithms)
 - Python (Scientific computing, general-purpose)
 - R (Statistical analysis, data science)
-- SQL (Database operations)
+- PostgresSQL/SQLite (Database operations)
 - Assembly (TO BE DECIDED, system-level programming)
 
 ## Study Group Structure
