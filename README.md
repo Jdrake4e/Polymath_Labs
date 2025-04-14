@@ -1,4 +1,4 @@
-# CS and Math Study Group
+# Polymath Labs
 
 A collaborative study group focused on computer science and mathematics, featuring rotating presenters, weekly sessions, and hands-on projects.
 
@@ -66,7 +66,7 @@ Study materials and examples will be provided in the following languages:
 2. Review the session calendar on Discord
 3. Clone the repository to access materials:
 ```bash
-git clone https://github.com/Jdrake4e/CS-and-Math-Study-Group.git
+git clone https://github.com/Jdrake4e/Polymath_Labs.git
 ```
 
 ## Repository Structure
